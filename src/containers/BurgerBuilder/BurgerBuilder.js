@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import Aux from '../../hoc/Auxiliary';
+import Aux from '../../hoc/Auxiliary/Auxiliary';
 import Burger from '../../components/Burger/Burger';
 import BuildControls from '../../components/Burger/BuildControls/BuildControls';
 import Modal from '../../components/UI/Modal/Modal';
@@ -64,6 +64,14 @@ class BurgerBuilder extends Component {
         this.setState({ purchasing: true });
     }
 
+    purchaseCancelledHandler = () => {
+        this.setState({ purchasing: false });
+    }
+
+    purchaseContinueHandler = () => {
+        alert('You continue');
+    }
+
     render() {
 
         const disabledInfo = {
@@ -74,8 +82,14 @@ class BurgerBuilder extends Component {
         }
         return (
             <Aux>
-                <Modal show={this.state.purchasing}>
-                    <OrderSummary ingredients={this.state.ingredients} />
+                <Modal
+                    show={this.state.purchasing}
+                    modalClosed={this.purchaseCancelledHandler}>
+                    <OrderSummary
+                        price={this.state.totalPrice}
+                        ingredients={this.state.ingredients}
+                        purchaseContinued={this.purchaseContinueHandler}
+                        purchaseCancelled={this.purchaseCancelledHandler} />
                 </Modal>
                 <Burger ingredients={this.state.ingredients} />
                 <BuildControls
