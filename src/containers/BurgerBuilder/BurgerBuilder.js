@@ -70,33 +70,31 @@ class BurgerBuilder extends Component {
 
     purchaseContinueHandler = () => {
         //alert('You continue');
-        this.setState({ loading: true });
-        const order = {
-            ingredients: this.state.ingredients,
-            price: this.state.totalPrice,
-            customer: {
-                name: 'Olga',
-                address: {
-                    street: 'Teststreet',
-                    zipCode: '820',
-                    country: 'Denmark'
-                },
-                email: 'test@test.com'
-            },
-            deliveryMethod: 'fastest'
+
+        const queryParams = [];
+        for (let i in this.state.ingredients) {
+            queryParams.push(encodeURIComponent(i) + '=' + encodeURIComponent(this.state.ingredients[i]));
         }
-        axios.post('/orders.json', order).then(res => {
-            console.log(res);
-            this.setState({ loading: false, purchasing: false });
-        }).catch(err => {
-            console.log(err);
-            this.setState({ loading: false, purchasing: false });
+        queryParams.push('price=' + this.state.totalPrice.toFixed(2));
+        const queryString = queryParams.join('&');
+        this.props.history.push({
+            pathname: '/checkout',
+            search: '?' + queryString
         });
+
     }
 
     componentDidMount() {
         axios.get('/ingredients.json').then(res => {
-            this.setState({ ingredients: res.data });
+            if (this.state.ingredients !== res.data) {
+                let newTotalPrice = this.state.totalPrice + Object.keys(res.data).map((key) => {
+                    return INGREDIENT_PRICES[key] * res.data[key];
+                }).reduce((el, cur) => {
+                    return cur + el;
+                });
+                this.setState({ ingredients: res.data, totalPrice: newTotalPrice });
+                this.updatePurchaseState(res.data);
+            }
         }).catch(err => {
             this.setState({ errorState: true });
         })
