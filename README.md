@@ -1,2 +1,3 @@
-# burger-builder
-Practicing building website with React
+# Burger shop restaurant
+
+Practicing React, React Redux and React Hooks
