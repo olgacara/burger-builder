@@ -4,7 +4,8 @@ import { updateObject } from '../utility';
 const initialState = {
     ingredients: null,
     totalPrice: 4,
-    error: false
+    error: false,
+    building: false
 }
 
 const INGREDIENT_PRICES = {
@@ -19,7 +20,8 @@ const addIngredient = (state, action) => {
     const updatedIngredients = updateObject(state.ingredients, newIngredients);
     const updatedState = {
         totalPrice: state.totalPrice + INGREDIENT_PRICES[action.ingredientName],
-        ingredients: updatedIngredients
+        ingredients: updatedIngredients,
+        building: true
     }
     return updateObject(state, updatedState);
 }
@@ -29,7 +31,8 @@ const removeIngredient = (state, action) => {
     const updatedIngredientsRemoval = updateObject(state.ingredients, newIngredientsRemoval);
     const updatedStateRemoval = {
         totalPrice: state.totalPrice - INGREDIENT_PRICES[action.ingredientName],
-        ingredients: updatedIngredientsRemoval
+        ingredients: updatedIngredientsRemoval,
+        building: true
     }
     return updateObject(state, updatedStateRemoval);
 }
@@ -43,7 +46,8 @@ const setIngredients = (state, action) => {
             cheese: action.ingredients.cheese,
             meat: action.ingredients.meat
         },
-        error: false
+        error: false,
+        building: false
     })
 }
 
